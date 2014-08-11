@@ -1,0 +1,18 @@
+#!/bin/zsh -e
+set -e
+source ~/.zshrc
+BASEDIR=/data/workspace/center_rest/rest
+PATH=/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin
+DAEMON=$BASEDIR/index.coffee
+WEBMODE=$_ENVMODE
+LOG=$BASEDIR/data/log/access.log
+case "$1" in
+  start) su - work -c "source /home/work/.zshrc && forever start -c iced -l /data/workspace/center_rest/rest/data/log/access.log -a $DAEMON --env development" ;;
+  stop) su - work -c "source /home/work/.zshrc && forever stop -c iced $DAEMON" ;;
+  force-reload|reload|restart)
+    su - work -c "source /home/work/.zshrc && forever restart -c iced -l /data/workspace/center_rest/rest/data/log/access.log -a $DAEMON --env development" ;;
+  *) echo "Usage: /etc/init.d/centerapi {start|stop|restart|reload|force-reload}"
+    exit 1
+    ;;
+esac
+exit 0
